@@ -54,6 +54,7 @@ struct LoginView: View {
                         } else {
                             //Sign in successful
                             print("Login Successfully.")
+                            
                         }
                     }
                 }
@@ -136,6 +137,7 @@ struct RegistrationView: View {
                             
                             //navigate user to home screen
                             print("Sign Up successfull")
+                            
                         }
                     }
                 }
