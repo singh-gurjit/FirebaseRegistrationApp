@@ -24,6 +24,7 @@ struct LoginView: View {
     @State var email: String
     @State var password: String
     @State var errorMessage: String
+    @State var isLogin = false
     
     var body: some View {
         VStack {
@@ -38,6 +39,7 @@ struct LoginView: View {
                 .border(Color.yellow, width: 1).cornerRadius(1)
             
             Spacer()
+            NavigationLink(destination: HomeView(), isActive: $isLogin) {
             Button(action: {
                 //get validation
                 let error = self.validationSignIn()
@@ -54,16 +56,19 @@ struct LoginView: View {
                         } else {
                             //Sign in successful
                             print("Login Successfully.")
-                            
+                            self.isLogin.toggle()
                         }
                     }
+                    
                 }
             }) {
                 Text("LOGIN")
-            }.padding(EdgeInsets(top: 10, leading: 40, bottom: 10, trailing: 40))
+            }
+            .padding(EdgeInsets(top: 10, leading: 40, bottom: 10, trailing: 40))
                 .foregroundColor(Color.white)
                 .background(Color.yellow)
                 .cornerRadius(40)
+            }
             Spacer()
             HStack {
                 Text("Don't have an Account? ").font(.subheadline)
@@ -97,6 +102,7 @@ struct RegistrationView: View {
     @State var newEmail: String
     @State var newPassword: String
     @State var errorMessage = ""
+    @State var isSignup = false
     
     var body: some View {
         VStack {
@@ -113,6 +119,7 @@ struct RegistrationView: View {
             .border(Color.yellow, width: 1).cornerRadius(1)
             Spacer()
             
+            NavigationLink(destination: HomeView(), isActive: $isSignup) {
             Button(action: {
                 //get validation
                 let error = self.validateSignUp()
@@ -137,6 +144,7 @@ struct RegistrationView: View {
                             
                             //navigate user to home screen
                             print("Sign Up successfull")
+                            self.isSignup = true
                             
                         }
                     }
@@ -147,6 +155,7 @@ struct RegistrationView: View {
                 .foregroundColor(Color.white)
                 .background(Color.yellow)
                 .cornerRadius(40)
+            }
             Spacer()
             HStack {
                 Text("Already have an Account? ").font(.subheadline)
@@ -177,22 +186,28 @@ struct RegistrationView: View {
 }
 
 struct HomeView: View {
+    
+    @State var isSignout = false
+    
     var body: some View {
         VStack {
             Text("Welcome!")
         }
+    .navigationBarBackButtonHidden(true)
         .navigationBarItems(trailing:
+            NavigationLink(destination: LoginView(email: "", password: "", errorMessage: ""), isActive: $isSignout) {
             Button(action: {
                 //Sign out user
                 let firebaseAuth = Auth.auth()
                 do {
                     try firebaseAuth.signOut()
+                    self.isSignout.toggle()
                 } catch {
                     print("Error while signing out.")
                 }
             }) {
                 Text("Sign out")
-            }
+                }}
         )
     }
 }
